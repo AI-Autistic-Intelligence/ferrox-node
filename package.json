@@ -1,6 +1,6 @@
 {
   "name": "@ferrox/node",
-  "version": "0.6.0",
+  "version": "0.0.1",
   "description": "Ferrox-Node: Standalone Enterprise Security & Web Framework for Node.js / TypeScript with Dual Fastify & Express Engine Support",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,5 +13,8 @@
   },
   "dependencies": {
     "crypto": "^1.0.1"
-  }
+  },
+  "workspaces": [
+    "node-yalc/*"
+  ]
 }
