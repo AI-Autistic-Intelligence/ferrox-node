@@ -23,6 +23,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 __exportStar(require("./core/ferrox-app"), exports);
+__exportStar(require("./core/di-container"), exports);
 __exportStar(require("./transports/http-adapters"), exports);
 __exportStar(require("./routing/decorators"), exports);
 __exportStar(require("./auth/paseto-auth.service"), exports);

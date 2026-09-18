@@ -9,6 +9,8 @@ exports.UseGuard = UseGuard;
 exports.Roles = Roles;
 exports.getControllerMetadata = getControllerMetadata;
 exports.getRolesMetadata = getRolesMetadata;
+exports.Injectable = Injectable;
+exports.Inject = Inject;
 const CONTROLLER_METADATA_KEY = Symbol('ferrox:controller');
 const ROUTE_METADATA_KEY = Symbol('ferrox:routes');
 const GUARDS_METADATA_KEY = Symbol('ferrox:guards');
@@ -84,4 +86,20 @@ function getRolesMetadata(target, propertyKey) {
         return Reflect.getMetadata(ROLES_METADATA_KEY, target.constructor, propertyKey) || [];
     }
     return Reflect.getMetadata(ROLES_METADATA_KEY, target) || [];
+}
+/**
+ * Dependency Injection Decorators
+ */
+const INJECTABLE_METADATA_KEY = Symbol('ferrox:injectable');
+function Injectable() {
+    return (target) => {
+        Reflect.defineMetadata(INJECTABLE_METADATA_KEY, true, target);
+    };
+}
+function Inject(token) {
+    return (target, propertyKey, parameterIndex) => {
+        const existingInjections = Reflect.getMetadata('ferrox:injections', target) || [];
+        existingInjections.push({ index: parameterIndex, token });
+        Reflect.defineMetadata('ferrox:injections', existingInjections, target);
+    };
 }

@@ -98,3 +98,22 @@ export function getRolesMetadata(target: any, propertyKey?: string): string[] {
   }
   return Reflect.getMetadata(ROLES_METADATA_KEY, target) || [];
 }
+
+/**
+ * Dependency Injection Decorators
+ */
+const INJECTABLE_METADATA_KEY = Symbol('ferrox:injectable');
+
+export function Injectable(): ClassDecorator {
+  return (target: any) => {
+    Reflect.defineMetadata(INJECTABLE_METADATA_KEY, true, target);
+  };
+}
+
+export function Inject(token: any): ParameterDecorator {
+  return (target: any, propertyKey: string | symbol | undefined, parameterIndex: number) => {
+    const existingInjections = Reflect.getMetadata('ferrox:injections', target) || [];
+    existingInjections.push({ index: parameterIndex, token });
+    Reflect.defineMetadata('ferrox:injections', existingInjections, target);
+  };
+}

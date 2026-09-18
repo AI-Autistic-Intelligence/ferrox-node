@@ -9,6 +9,7 @@
 import 'reflect-metadata';
 
 export * from './core/ferrox-app';
+export * from './core/di-container';
 export * from './transports/http-adapters';
 export * from './routing/decorators';
 export * from './auth/paseto-auth.service';
@@ -26,4 +27,6 @@ export * from './storage/storage-engine';
 export * from './i18n/i18n-engine';
 export * from './tracing/tracing-logger';
 export * from './config/config-engine';
+export * from './config/ferrox-config.service';
 export * from './transports/websocket-kafka';
+export * from './interfaces/lifecycle.interface';

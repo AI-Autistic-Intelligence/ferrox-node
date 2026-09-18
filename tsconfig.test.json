@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2022",
+    "declaration": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "@node-yalc/*": [
+        "./node-yalc/*/src/*"
+      ],
+      "@node-yalc/*.js": [
+        "./node-yalc/*/src/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "node-yalc/**/*"
+  ],
+  "exclude": [
+    "src/__tests__",
+    "node-yalc/**/__tests__",
+    "node-yalc/**/*.spec.ts"
+  ],
+  "ts-node": {
+    "experimentalResolver": true
+  }
+}

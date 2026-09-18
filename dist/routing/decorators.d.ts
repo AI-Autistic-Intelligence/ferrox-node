@@ -22,3 +22,5 @@ export declare function UseGuard(...guards: any[]): MethodDecorator & ClassDecor
 export declare function Roles(...roles: string[]): MethodDecorator & ClassDecorator;
 export declare function getControllerMetadata(controllerInstance: any): ControllerMetadata;
 export declare function getRolesMetadata(target: any, propertyKey?: string): string[];
+export declare function Injectable(): ClassDecorator;
+export declare function Inject(token: any): ParameterDecorator;

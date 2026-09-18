@@ -1,21 +1,179 @@
 {
-  "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "target": "ES2022",
-    "declaration": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "types": ["node", "jest"],
-    "paths": {
-      "@node-yalc/*": ["./node-yalc/*/src", "./node-yalc/*/src/*"]
-    }
-  },
-  "include": ["src/**/*"],
-  "exclude": ["src/__tests__"]
+    "compilerOptions":  {
+                            "module":  "commonjs",
+                            "moduleResolution":  "node",
+                            "target":  "ES2022",
+                            "declaration":  true,
+                            "outDir":  "./dist",
+                            "rootDir":  ".",
+                            "strict":  true,
+                            "experimentalDecorators":  true,
+                            "emitDecoratorMetadata":  true,
+                            "skipLibCheck":  true,
+                            "esModuleInterop":  true,
+                            "types":  [
+                                          "node"
+                                      ],
+                            "baseUrl":  ".",
+                            "paths":  {
+                                          "@node-yalc/config":  [
+                                                                    "./node-yalc/config/src/index.ts",
+                                                                    "./node-yalc/config/src/index.js"
+                                                                ],
+                                          "@node-yalc/config/*":  [
+                                                                      "./node-yalc/config/src/*"
+                                                                  ],
+                                          "@node-yalc/logger":  [
+                                                                    "./node-yalc/logger/src/index.ts",
+                                                                    "./node-yalc/logger/src/index.js"
+                                                                ],
+                                          "@node-yalc/logger/*":  [
+                                                                      "./node-yalc/logger/src/*"
+                                                                  ],
+                                          "@node-yalc/utils":  [
+                                                                   "./node-yalc/utils/src/index.ts",
+                                                                   "./node-yalc/utils/src/index.js"
+                                                               ],
+                                          "@node-yalc/utils/*":  [
+                                                                     "./node-yalc/utils/src/*"
+                                                                 ],
+                                          "@node-yalc/types":  [
+                                                                   "./node-yalc/types/src/index.ts",
+                                                                   "./node-yalc/types/src/index.js"
+                                                               ],
+                                          "@node-yalc/types/*":  [
+                                                                     "./node-yalc/types/src/*"
+                                                                 ],
+                                          "@node-yalc/interfaces":  [
+                                                                        "./node-yalc/interfaces/src/index.ts",
+                                                                        "./node-yalc/interfaces/src/index.js"
+                                                                    ],
+                                          "@node-yalc/interfaces/*":  [
+                                                                          "./node-yalc/interfaces/src/*"
+                                                                      ],
+                                          "@node-yalc/errors":  [
+                                                                    "./node-yalc/errors/src/index.ts",
+                                                                    "./node-yalc/errors/src/index.js"
+                                                                ],
+                                          "@node-yalc/errors/*":  [
+                                                                      "./node-yalc/errors/src/*"
+                                                                  ],
+                                          "@node-yalc/event-manager":  [
+                                                                           "./node-yalc/event-manager/src/index.ts",
+                                                                           "./node-yalc/event-manager/src/index.js"
+                                                                       ],
+                                          "@node-yalc/event-manager/*":  [
+                                                                             "./node-yalc/event-manager/src/*"
+                                                                         ],
+                                          "@node-yalc/database":  [
+                                                                      "./node-yalc/database/src/index.ts",
+                                                                      "./node-yalc/database/src/index.js"
+                                                                  ],
+                                          "@node-yalc/database/*":  [
+                                                                        "./node-yalc/database/src/*"
+                                                                    ],
+                                          "@node-yalc/ag-grid":  [
+                                                                     "./node-yalc/ag-grid/src/index.ts",
+                                                                     "./node-yalc/ag-grid/src/index.js"
+                                                                 ],
+                                          "@node-yalc/ag-grid/*":  [
+                                                                       "./node-yalc/ag-grid/src/*"
+                                                                   ],
+                                          "@node-yalc/sentinel":  [
+                                                                      "./node-yalc/sentinel/src/index.ts",
+                                                                      "./node-yalc/sentinel/src/index.js"
+                                                                  ],
+                                          "@node-yalc/sentinel/*":  [
+                                                                        "./node-yalc/sentinel/src/*"
+                                                                    ],
+                                          "@node-yalc/cqrs":  [
+                                                                  "./node-yalc/cqrs/src"
+                                                              ],
+                                          "@node-yalc/cqrs/*":  [
+                                                                    "./node-yalc/cqrs/src/*"
+                                                                ],
+                                          "@node-yalc/resilience":  [
+                                                                        "./node-yalc/resilience/src"
+                                                                    ],
+                                          "@node-yalc/resilience/*":  [
+                                                                          "./node-yalc/resilience/src/*"
+                                                                      ],
+                                          "@node-yalc/datagrid":  [
+                                                                      "./node-yalc/datagrid/src"
+                                                                  ],
+                                          "@node-yalc/datagrid/*":  [
+                                                                        "./node-yalc/datagrid/src/*"
+                                                                    ],
+                                          "@node-yalc/jobs":  [
+                                                                  "./node-yalc/jobs/src"
+                                                              ],
+                                          "@node-yalc/jobs/*":  [
+                                                                    "./node-yalc/jobs/src/*"
+                                                                ],
+                                          "@node-yalc/storage":  [
+                                                                     "./node-yalc/storage/src"
+                                                                 ],
+                                          "@node-yalc/storage/*":  [
+                                                                       "./node-yalc/storage/src/*"
+                                                                   ],
+                                          "@node-yalc/tracing":  [
+                                                                     "./node-yalc/tracing/src"
+                                                                 ],
+                                          "@node-yalc/tracing/*":  [
+                                                                       "./node-yalc/tracing/src/*"
+                                                                   ],
+                                          "@node-yalc/auth":  [
+                                                                  "./node-yalc/auth/src"
+                                                              ],
+                                          "@node-yalc/auth/*":  [
+                                                                    "./node-yalc/auth/src/*"
+                                                                ],
+                                          "@node-yalc/i18n":  [
+                                                                  "./node-yalc/i18n/src"
+                                                              ],
+                                          "@node-yalc/i18n/*":  [
+                                                                    "./node-yalc/i18n/src/*"
+                                                                ],
+                                          "@node-yalc/selftest":  [
+                                                                      "./node-yalc/selftest/src"
+                                                                  ],
+                                          "@node-yalc/selftest/*":  [
+                                                                        "./node-yalc/selftest/src/*"
+                                                                    ],
+                                          "@node-yalc/guards":  [
+                                                                    "./node-yalc/guards/src"
+                                                                ],
+                                          "@node-yalc/guards/*":  [
+                                                                      "./node-yalc/guards/src/*"
+                                                                  ],
+                                          "@node-yalc/kernel":  [
+                                                                    "./node-yalc/kernel/src"
+                                                                ],
+                                          "@node-yalc/kernel/*":  [
+                                                                      "./node-yalc/kernel/src/*"
+                                                                  ],
+                                          "@node-yalc/security":  [
+                                                                      "./node-yalc/security/src"
+                                                                  ],
+                                          "@node-yalc/security/*":  [
+                                                                        "./node-yalc/security/src/*"
+                                                                    ],
+                                          "@node-yalc/transports":  [
+                                                                        "./node-yalc/transports/src"
+                                                                    ],
+                                          "@node-yalc/transports/*":  [
+                                                                          "./node-yalc/transports/src/*"
+                                                                      ]
+                                      }
+                        },
+    "include":  [
+                    "src/**/*",
+                    "node-yalc/**/*"
+                ],
+    "exclude":  [
+                    "src/__tests__",
+                    "node-yalc/**/__tests__",
+                    "node-yalc/**/*.spec.ts",
+                    "node-yalc/**/__mocks__"
+                ]
 }

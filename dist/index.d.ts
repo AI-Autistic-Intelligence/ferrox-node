@@ -7,6 +7,7 @@
  */
 import 'reflect-metadata';
 export * from './core/ferrox-app';
+export * from './core/di-container';
 export * from './transports/http-adapters';
 export * from './routing/decorators';
 export * from './auth/paseto-auth.service';
