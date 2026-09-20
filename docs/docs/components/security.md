@@ -23,16 +23,14 @@ sidebar_position: 2
 
 ### Shannon Entropy Calculation
 
-Shannon entropy calculates the amount of information uncertainty or randomness in a string or buffer:
+Shannon entropy calculates the amount of information uncertainty or randomness in a string or buffer.
 
-$$\mathcal{H}(X) = -\sum_{i=1}^{n} P(x_i) \log_2 P(x_i)$$
+Where P(x_i) is the relative frequency of byte x_i in the payload.
+- **Plain Text (JSON, HTML)**: H(X) \approx 3.5 - 4.8
+- **Base64 Payload / Obfuscated SQLi**: H(X) \approx 5.2 - 6.5
+- **Binary Shellcode / Encrypted Buffers**: H(X) > 7.2
 
-Where $P(x_i)$ is the relative frequency of byte $x_i$ in the payload.
-- **Plain Text (JSON, HTML)**: $\mathcal{H}(X) \approx 3.5 - 4.8$
-- **Base64 Payload / Obfuscated SQLi**: $\mathcal{H}(X) \approx 5.2 - 6.5$
-- **Binary Shellcode / Encrypted Buffers**: $\mathcal{H}(X) > 7.2$
-
-If $\mathcal{H}(X)$ exceeds the security threshold ($\ge 7.2$), Sentinel immediately isolates the request, terminating the HTTP lifecycle with an HTTP `403 Forbidden` status.
+If H(X) exceeds the security threshold (\ge 7.2), Sentinel immediately isolates the request, terminating the HTTP lifecycle with an HTTP `403 Forbidden` status.
 
 ---
 
@@ -80,7 +78,7 @@ export class PromptSecurityController {
 ## ⚠️ 6. Anti-Patterns: How NOT to Use It
 
 1. ❌ **DO NOT disable sanitization on LLM input forms**: Passing raw user inputs directly to AI model prompts without ChatML cleaning exposes your application to System Prompt Hijacking attacks.
-2. ❌ **DO NOT apply low entropy thresholds to image/ZIP file uploads**: Legitimate binary files (JPEG, PNG, ZIP) naturally exhibit high entropy ($\mathcal{H}(X) > 7.5$). Apply entropy filtering selectively to text and JSON request bodies.
+2. ❌ **DO NOT apply low entropy thresholds to image/ZIP file uploads**: Legitimate binary files (JPEG, PNG, ZIP) naturally exhibit high entropy (H(X) > 7.5). Apply entropy filtering selectively to text and JSON request bodies.
 
 ---
 
