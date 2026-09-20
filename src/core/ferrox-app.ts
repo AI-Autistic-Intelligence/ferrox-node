@@ -69,7 +69,7 @@ export class FerroxApp {
         const routeDef: FerroxRouteDefinition = {
           method: routeMeta.method,
           path: fullPath,
-          handler: async (req, res) => {
+          handler: async (req: any, res: any) => {
             const startTime = Date.now();
             this.logger?.debug?.(`[REQUEST] ${req.method} ${req.url}`);
 
@@ -129,7 +129,7 @@ export class FerroxApp {
     process.on('SIGINT', () => this.shutdown());
     process.on('SIGTERM', () => this.shutdown());
 
-    return this.server;
+    return this.server as any;
   }
 
   public async shutdown(): Promise<void> {
