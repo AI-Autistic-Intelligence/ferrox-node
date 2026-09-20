@@ -1,17 +1,14 @@
 import { Injectable } from '../routing/decorators';
-import { ConfigManager } from '@node-yalc/config';
-import { ConfigEngine } from './config-engine';
+import { ConfigEngine } from '@node-yalc/config';
 
 @Injectable()
-export class FerroxConfigService<T = any> extends ConfigManager<T> {
+export class FerroxConfigService<T = any> extends ConfigEngine {
   constructor() {
-    // For now we use the global ConfigEngine as the provider, and a default app alias
-    const engine = new ConfigEngine({
+    super({
       ferrox: {
         APP_NAME: 'Ferrox Enterprise API',
         PORT: 3000
       }
     });
-    super(engine, 'ferrox');
   }
 }
