@@ -1,6 +1,6 @@
 {
   "name": "@ferrox-node/core",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Ferrox-Node: Standalone Enterprise Security & Web Framework for Node.js / TypeScript with Dual Fastify & Express Engine Support",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
