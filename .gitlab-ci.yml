@@ -1,0 +1,23 @@
+image: node:20-alpine
+
+stages:
+  - test
+  - build
+
+cache:
+  paths:
+    - node_modules/
+
+test:
+  stage: test
+  script:
+    - npm ci
+    - npm test --if-present
+
+docker-build:
+  stage: build
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  script:
+    - docker build -t ferrox/node-realtime:$CI_COMMIT_SHA .
