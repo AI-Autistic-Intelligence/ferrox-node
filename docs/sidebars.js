@@ -3,7 +3,28 @@ module.exports = {
     {
       type: 'category',
       label: 'Getting Started',
-      items: ['intro', 'quickstart'],
+      items: ['intro', 'quickstart', 'dummy-app-guide'],
+    },
+    {
+      type: 'category',
+      label: 'Architectures',
+      items: [
+        'architectures/onion',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Fundamentals',
+      items: [
+        'fundamentals/cqrs',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Security & Auth',
+      items: [
+        'security/paseto',
+      ],
     },
     {
       type: 'category',

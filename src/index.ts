@@ -30,3 +30,7 @@ export * from './config/config-engine';
 export * from './config/ferrox-config.service';
 export * from './transports/websocket-kafka';
 export * from './interfaces/lifecycle.interface';
+export * from './database/database.config';
+export * from './database/database.factory';
+export * from './infrastructure/deploy.config';
+export * from './infrastructure/deploy.factory';
