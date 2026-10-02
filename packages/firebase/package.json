@@ -1,20 +1,20 @@
 {
-    "name":  "@ferrox-node/firebase",
-    "version":  "1.1.1",
-    "description":  "Firebase Adapters for Ferrox-Node",
-    "main":  "dist/index.js",
-    "types":  "dist/index.d.ts",
-    "license":  "MIT",
-    "scripts":  {
-                    "build":  "tsc"
-                },
-    "dependencies":  {
-                         "firebase-admin":  "^13.10.0",
-                         "@ferrox-node/core":  "*"
-                     },
-    "devDependencies":  {
-                            "@types/node":  "^20.0.0",
-                            "typescript":  "^5.0.0"
-                        },
-    "type":  "module"
+    "name": "@ferrox-node/firebase",
+    "version": "1.1.2",
+    "description": "Firebase Adapters for Ferrox-Node",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "license": "MIT",
+    "scripts": {
+        "build": "tsc"
+    },
+    "dependencies": {
+        "firebase-admin": "^13.10.0",
+        "@ferrox-node/core": "*"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "typescript": "^5.0.0"
+    },
+    "type": "module"
 }

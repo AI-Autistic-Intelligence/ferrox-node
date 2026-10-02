@@ -1,20 +1,20 @@
 {
-    "name":  "@ferrox-node/redis",
-    "version":  "1.1.1",
-    "description":  "Advanced Redis, Distributed Locks, and Caching for Ferrox-Node",
-    "main":  "dist/index.js",
-    "types":  "dist/index.d.ts",
-    "scripts":  {
-                    "build":  "tsc"
-                },
-    "dependencies":  {
-                         "@ferrox-node/core":  "*",
-                         "ioredis":  "^5.4.1",
-                         "redlock":  "^5.0.0-beta.2"
-                     },
-    "devDependencies":  {
-                            "typescript":  "^5.0.0",
-                            "@types/node":  "^20.0.0"
-                        },
-    "type":  "module"
+    "name": "@ferrox-node/redis",
+    "version": "1.1.2",
+    "description": "Advanced Redis, Distributed Locks, and Caching for Ferrox-Node",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc"
+    },
+    "dependencies": {
+        "@ferrox-node/core": "*",
+        "ioredis": "^5.4.1",
+        "redlock": "^5.0.0-beta.2"
+    },
+    "devDependencies": {
+        "typescript": "^5.0.0",
+        "@types/node": "^20.0.0"
+    },
+    "type": "module"
 }
