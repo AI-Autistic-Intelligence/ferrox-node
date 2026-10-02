@@ -1,0 +1,21 @@
+{
+  "name": "@ferrox-node/gcp",
+  "version": "1.1.0",
+  "description": "Google Cloud Platform Adapters for Ferrox-Node",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@ferrox-node/core": "^1.1.0",
+    "@google-cloud/firestore": "^7.7.0",
+    "@google-cloud/pubsub": "^4.4.0",
+    "@google-cloud/storage": "^7.10.0",
+    "@google-cloud/secret-manager": "^5.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}
