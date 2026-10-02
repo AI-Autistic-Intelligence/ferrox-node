@@ -8,7 +8,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@ferrox-node/core": "^1.1.0",
+    "@ferrox-node/core": "*",
     "@google-cloud/firestore": "^7.7.0",
     "@google-cloud/pubsub": "^4.4.0",
     "@google-cloud/storage": "^7.10.0",
