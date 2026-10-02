@@ -2,8 +2,7 @@
     "name": "ferrox-node-workspace",
     "private": true,
     "workspaces": [
-        "packages/*",
-        "node-yalc/*"
+        "packages/*"
     ],
     "scripts": {
         "build": "npm run build --workspaces --if-present"
@@ -13,5 +12,30 @@
         "@types/nodemailer": "^8.0.2",
         "jest": "^30.5.2",
         "ts-jest": "^29.4.14"
+    },
+    "dependencies": {
+        "@node-yalc/auth": "^0.0.3",
+        "@node-yalc/aws-helpers": "^0.1.5",
+        "@node-yalc/common": "^0.1.5",
+        "@node-yalc/config": "^0.0.3",
+        "@node-yalc/cqrs": "^0.0.3",
+        "@node-yalc/datagrid": "^0.0.3",
+        "@node-yalc/errors": "^0.1.5",
+        "@node-yalc/event-manager": "^0.1.5",
+        "@node-yalc/guards": "^0.0.3",
+        "@node-yalc/i18n": "^0.0.3",
+        "@node-yalc/interfaces": "^0.1.5",
+        "@node-yalc/jobs": "^0.0.3",
+        "@node-yalc/kernel": "^0.0.3",
+        "@node-yalc/logger": "^0.1.5",
+        "@node-yalc/resilience": "^0.0.3",
+        "@node-yalc/security": "^0.0.3",
+        "@node-yalc/selftest": "^0.0.3",
+        "@node-yalc/storage": "^0.0.3",
+        "@node-yalc/tracing": "^0.0.3",
+        "@node-yalc/transports": "^0.0.3",
+        "@node-yalc/types": "^0.1.5",
+        "@node-yalc/types-extends": "^0.1.5",
+        "@node-yalc/utils": "^0.1.5"
     }
 }

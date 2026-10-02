@@ -1,6 +1,4 @@
-[submodule "node-yalc"]
-	path = node-yalc
-	url = https://github.com/AI-Autistic-Intelligence/node-yalc.git
+
 [submodule "infrastructure"]
 	path = infrastructure
 	url = file:///C:/Users/nn/Desktop/code/ferrox-infrastructure
