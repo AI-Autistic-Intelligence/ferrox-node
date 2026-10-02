@@ -1,40 +1,19 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
+const { pathsToModuleNameMapper } = require('ts-jest');
+const { compilerOptions } = require('./tsconfig.test.json');
+
+const aliasMapper = pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' });
+
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: ['**/*.spec.ts'],
-  transform: {
-    '^.+\\.tsx?$': ['ts-jest', {
-      tsconfig: '<rootDir>/tsconfig.test.json'
-    }]
-  },
-  modulePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/node-yalc/'],
+  transformIgnorePatterns: ['node_modules/(?!(p-map|lodash-es)/)'],
   moduleNameMapper: {
-    '^@ferrox-node/(.*)$': '<rootDir>/packages/$1/src',
-    '^@node-yalc/([^/]+)$': '<rootDir>/node-yalc/$1/src',
-    '^@node-yalc/([^/]+)/(.*)$': '<rootDir>/node-yalc/$1/src/$2',
-    '^lodash-es(.*)$': 'lodash$1',
-    '^../../../../sentinel/dist/index$': '<rootDir>/__mocks__/sentinel.ts'
+    ...aliasMapper,
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+    '^lodash-es$': 'lodash'
   },
-  resolver: '<rootDir>/jest-resolver.js',
-  transformIgnorePatterns: [
-    'node_modules/(?!lodash-es|p-map)'
-  ],
-  collectCoverage: true,
-  coverageDirectory: 'coverage',
-  collectCoverageFrom: [
-    'packages/*/src/**/*.ts',
-    '!packages/*/src/**/index.ts', // mostly re-exports
-    '!packages/core/src/index.ts',
-    '!packages/core/src/**/index.ts',
-    '!packages/core/src/dummy-app.ts'
-  ],
-  coverageThreshold: {
-    global: {
-      branches: 100,
-      functions: 100,
-      lines: 100,
-      statements: 100
-    }
+  testMatch: ['<rootDir>/packages/**/*.spec.ts', '<rootDir>/packages/**/__tests__/**/*.ts'],
+  transform: {
+    '^.+\\.[tj]sx?$': ['ts-jest', { tsconfig: 'tsconfig.test.json' }]
   }
 };
