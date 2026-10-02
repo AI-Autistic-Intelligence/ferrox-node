@@ -3,32 +3,75 @@ import { AppLoggerFactory } from '@node-yalc/logger';
 
 const logger = AppLoggerFactory('SmartCacheManager');
 
+/**
+ * Options for fetching and caching resources using the SmartCacheManager.
+ */
 export interface CacheFetchOptions {
-  userId: string;         // Mandatory to prevent returning one user's data to another!
-  resourceName: string;   // e.g. 'profile', 'billing'
+  /** 
+   * Mandatory user identifier. 
+   * Enforced to prevent cross-tenant data leakage and ensure strict cache isolation per user. 
+   */
+  userId: string;
+  /** 
+   * The name or identifier of the resource being fetched (e.g., 'profile', 'billing'). 
+   */
+  resourceName: string;
+  /** 
+   * Time-to-Live (TTL) for the cached item in seconds. 
+   */
   ttlSeconds: number;
-  fetcher: () => Promise<any>; // The function that actually hits the DB
+  /** 
+   * The asynchronous function that fetches the data from the primary data store (e.g., Database) 
+   * in the event of a cache miss. 
+   */
+  fetcher: () => Promise<any>;
 }
 
+/**
+ * Enterprise Smart Cache Manager.
+ * 
+ * Implements advanced caching patterns to guarantee extreme performance and stability:
+ * - **Thundering Herd Protection**: Uses in-memory Promise multiplexing to deduplicate concurrent requests on the same Node.js instance.
+ * - **Cache Stampede Prevention**: Utilizes distributed Redis locks (Redlock pattern) to ensure only a single worker across the cluster hits the database when a cache miss occurs.
+ * - **Strict Tenant Isolation**: Automatically namespaces cache keys by `userId` to prevent data leakage.
+ */
 export class SmartCacheManager {
+  /** 
+   * In-memory multiplexing map to track currently active fetches and prevent duplicate DB queries. 
+   */
   private inFlightPromises = new Map<string, Promise<any>>();
   private redis: RedisHelper;
 
+  /**
+   * Initializes the SmartCacheManager with a Redis connection helper.
+   * @param redisHelper An instance of RedisHelper connected to the cache cluster.
+   */
   constructor(redisHelper: RedisHelper) {
     this.redis = redisHelper;
   }
 
   /**
-   * Generates a hyper-strict, isolated cache key.
+   * Generates a hyper-strict, isolated cache key scoped by user.
+   * @param userId The ID of the user requesting the resource.
+   * @param resourceName The resource being requested.
+   * @returns {string} A Redis-compatible namespaced key string.
+   * @private
    */
   private generateKey(userId: string, resourceName: string): string {
     return `ferrox:cache:user:${userId}:res:${resourceName}`;
   }
 
   /**
-   * Fetches data with Thundering Herd & Cache Stampede Protection (Multi-tier).
-   * 1. In-Memory Promise Deduplication (Single-Node Lock)
-   * 2. Redis Distributed Lock (Multi-Node Lock)
+   * Retrieves data from the cache or securely fetches it from the database.
+   * Implements a Multi-tier Thundering Herd & Cache Stampede Protection system.
+   * 
+   * - **Tier 1**: In-Memory Promise Deduplication (Single-Node Lock).
+   * - **Tier 2**: Distributed Redis Cache Check.
+   * - **Tier 3**: Distributed Redis Lock (Multi-Node Lock) before DB fetch.
+   * 
+   * @template T The expected type of the data returned.
+   * @param {CacheFetchOptions} options The fetch configuration options.
+   * @returns {Promise<T>} The requested data, either from cache or freshly fetched.
    */
   public async getOrFetch<T>(options: CacheFetchOptions): Promise<T> {
     const cacheKey = this.generateKey(options.userId, options.resourceName);
@@ -51,6 +94,10 @@ export class SmartCacheManager {
     }
   }
 
+  /**
+   * Internal routine for handling Redis checking, locking, and DB fetching.
+   * @private
+   */
   private async internalFetch<T>(cacheKey: string, options: CacheFetchOptions): Promise<T> {
     // TIER 2: Check Redis Cache
     const cachedValue = await this.redis.getCache<T>(cacheKey);
@@ -97,4 +144,5 @@ export class SmartCacheManager {
     }
   }
 }
+
 

@@ -5,9 +5,20 @@ import { AppLoggerFactory } from '@node-yalc/logger';
 
 const logger = AppLoggerFactory('AwsCloudAdapters');
 
+/**
+ * Enterprise AWS Cloud Factory.
+ * 
+ * Centralizes the instantiation and configuration of AWS SDK v3 clients (DynamoDB, S3, etc).
+ * Supports zero-config fallback to environment variables (`AWS_ACCESS_KEY_ID`),
+ * custom endpoint overrides (vital for LocalStack / local development), 
+ * and secure credential injection via the DatabaseConfig payload.
+ */
 export class AwsFactory {
   /**
-   * Initializes and returns an AWS DynamoDB Client
+   * Initializes and returns a fully configured AWS DynamoDB Client.
+   * 
+   * @param {DatabaseConnectionConfig} config Configuration payload containing region and credentials.
+   * @returns {DynamoDBClient} The native AWS SDK v3 DynamoDB client instance.
    */
   static createDynamoDbConnection(config: DatabaseConnectionConfig): DynamoDBClient {
     const client = new DynamoDBClient({
@@ -24,7 +35,12 @@ export class AwsFactory {
   }
 
   /**
-   * Initializes and returns an AWS S3 Client
+   * Initializes and returns an AWS S3 Client.
+   * Forces Path Style formatting when a custom endpoint is provided, ensuring 
+   * compatibility with local emulation tools like LocalStack and MinIO.
+   * 
+   * @param config The S3 connection configuration containing keys, region, and optional endpoint.
+   * @returns {S3Client} The native AWS SDK v3 S3 client instance.
    */
   static createS3Client(config: { region?: string; endpoint?: string; accessKeyId?: string; secretAccessKey?: string }): S3Client {
     const client = new S3Client({
@@ -41,5 +57,6 @@ export class AwsFactory {
     return client;
   }
 }
+
 
 

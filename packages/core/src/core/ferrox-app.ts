@@ -11,16 +11,32 @@ import { FerroxSentinelSecurityEngine } from '@ferrox-node/security';
 import { AppLoggerFactory, ImprovedLoggerService } from '@node-yalc/logger';
 import { FerroxDIContainer } from './di-container';
 
+/**
+ * Configuration options for the FerroxApp instance.
+ */
 export interface FerroxAppOptions {
+  /** The underlying HTTP engine to use (e.g., 'fastify' or 'express'). Defaults to 'fastify'. */
   engine?: HttpEngineType;
+  /** The port number the server will listen on. Defaults to 8080. */
   port?: number;
+  /** The hostname or IP address the server will bind to. Defaults to '0.0.0.0'. */
   host?: string;
+  /** An array of Controller classes to be instantiated and mapped to routes. */
   controllers?: any[];
+  /** An array of Guard instances that run globally on every request. */
   globalGuards?: any[];
+  /** An array of middlewares to apply to the server. */
   middlewares?: Array<{ path?: string; handler: any }>;
+  /** Secret key for the Sentinel Security Engine. */
   sentinelSecretKey?: string;
 }
 
+/**
+ * Main application class for the Ferrox-Node framework.
+ * 
+ * Provides dual-engine support (Express and Fastify), advanced security features,
+ * Dependency Injection, and comprehensive observability through its modular architecture.
+ */
 export class FerroxApp {
   private adapter: IFerroxHttpAdapter;
   private port: number;
@@ -28,11 +44,19 @@ export class FerroxApp {
   private controllers: any[];
   private globalGuards: any[];
   private middlewares: Array<{ path?: string; handler: any }>;
+  
+  /** The active Sentinel Security engine instance. */
   public sentinel: FerroxSentinelSecurityEngine;
+  /** Global logger instance used by the application framework. */
   public logger: ImprovedLoggerService;
+  
   private server?: http.Server;
   private di = FerroxDIContainer.getInstance();
 
+  /**
+   * Initializes the Ferrox application and its underlying HTTP adapter.
+   * @param options Configuration options for the application.
+   */
   constructor(options: FerroxAppOptions = {}) {
     const engineType = options.engine || 'fastify';
     this.adapter = engineType === 'express' ? new ExpressHttpAdapter() : new FastifyHttpAdapter();

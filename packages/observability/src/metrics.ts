@@ -4,35 +4,64 @@ import * as perf_hooks from 'perf_hooks';
 
 const logger = AppLoggerFactory('GlobalMetricsEngine');
 
+/**
+ * Enterprise Global Metrics Engine for Ferrox-Node Observability.
+ * 
+ * Provides a centralized singleton manager for exposing system telemetry, 
+ * business KPIs, and infrastructure health checks to Prometheus and Grafana.
+ * Automatically tracks CPU, Memory Heap, Event Loop Lag, and Application Panics.
+ * 
+ * Features:
+ * - Prometheus Exporter (`prom-client`) integration
+ * - Automated sampling of V8 Engine internals (Event Loop, Garbage Collection)
+ * - Built-in threshold alerting for critical bottlenecks
+ * - Panic hooks for uncaught exceptions tracing
+ * 
+ * @example
+ * ```typescript
+ * GlobalMetricsEngine.init();
+ * const metricsStr = await GlobalMetricsEngine.getMetricsString();
+ * ```
+ */
 export class GlobalMetricsEngine {
   private static isInitialized = false;
   private static samplingTimer: NodeJS.Timeout | null = null;
 
   /** 
-   * Gauge metric that tracks the Node.js Event Loop Lag. 
-   * Crucial for detecting if synchronous code is blocking the main thread.
+   * Gauge metric that tracks the Node.js Event Loop Lag in milliseconds.
+   * Crucial for detecting if synchronous code is blocking the main thread (CPU starvation).
+   * @type {client.Gauge<string>}
    */
   public static eventLoopLag: client.Gauge<string>;
 
   /** 
    * Gauge metric tracking the number of active connections in the database pool.
+   * Useful to detect connection leaks or database starvation.
+   * @type {client.Gauge<string>}
    */
   public static activeDatabaseConnections: client.Gauge<string>;
 
   /** 
    * Counter tracking the total number of HTTP 5xx Server Errors (Crashes/Panics).
+   * Monitored by the panic hooks to alert on system degradation.
+   * @type {client.Counter<string>}
    */
   public static http5xxErrorRate: client.Counter<string>;
 
   /** 
    * Gauge metric for the current V8 Memory Heap Used in bytes.
+   * Automatically alerts if the heap approaches the V8 max limit (e.g. 1.5GB default).
+   * @type {client.Gauge<string>}
    */
   public static processMemoryHeapUsed: client.Gauge<string>;
 
   /**
-   * Initializes default global system metrics and alerts
+   * Initializes default global system metrics, registers Prometheus collectors,
+   * and starts the background sampling interval.
+   * 
+   * This method is idempotent and will safely return if called multiple times.
    */
-  public static init() {
+  public static init(): void {
     if (this.isInitialized) return;
     this.isInitialized = true;
 
@@ -69,10 +98,10 @@ export class GlobalMetricsEngine {
 
   /**
    * Periodically sample non-event-driven metrics.
-   * Starts a detached setInterval that samples event loop lag and memory usage.
-   * Includes built-in alerting thresholds (e.g. 100ms lag, 1.5GB memory).
+   * Uses `setImmediate` and `hrtime` to calculate precise Event Loop delay.
+   * Includes built-in hardcoded alerting thresholds (e.g., > 100ms lag, > 1.5GB memory).
    */
-  public static sampleMetrics() {
+  public static sampleMetrics(): void {
     // Monitor Event Loop Lag
     const start = process.hrtime.bigint();
     setImmediate(() => {
@@ -96,14 +125,23 @@ export class GlobalMetricsEngine {
     }
   }
 
-  private static startPeriodicSampling() {
+  /**
+   * Starts a detached background interval for metric sampling.
+   * The interval is unreferenced (`unref()`) to prevent it from keeping the Node process alive.
+   * @private
+   */
+  private static startPeriodicSampling(): void {
     this.samplingTimer = setInterval(() => {
       this.sampleMetrics();
     }, 5000);
     this.samplingTimer.unref(); // unref so it doesn't prevent Node from exiting
   }
 
-  public static destroy() {
+  /**
+   * Gracefully tears down the metrics engine.
+   * Stops the sampling timer and clears the Prometheus registry.
+   */
+  public static destroy(): void {
     if (this.samplingTimer) {
       clearInterval(this.samplingTimer);
       this.samplingTimer = null;
@@ -113,11 +151,12 @@ export class GlobalMetricsEngine {
   }
 
   /**
-   * Hook into process-level crash events to record them before the process dies.
-   * Captures uncaught exceptions and unhandled promise rejections, increments
+   * Hooks into process-level crash events to record them before the process dies.
+   * Captures `uncaughtException` and `unhandledRejection`, increments
    * the 5xx error rate metric, and logs the critical failure.
+   * @private
    */
-  private static setupPanicHooks() {
+  private static setupPanicHooks(): void {
     process.on('uncaughtException', (err) => {
       logger.error(`[ALERT] Uncaught Exception (Process Crash imminent): ${err.message}`);
       this.http5xxErrorRate.inc(); // Increment crash counter
@@ -130,7 +169,8 @@ export class GlobalMetricsEngine {
   }
 
   /**
-   * Generates the Prometheus Metrics text to be exposed on an endpoint (e.g., /metrics).
+   * Generates the Prometheus Metrics text to be exposed on an endpoint (e.g., `/metrics`).
+   * Fetches all registered metrics from the prom-client global registry.
    * 
    * @returns {Promise<string>} A string containing all metrics formatted for Prometheus scraping.
    */

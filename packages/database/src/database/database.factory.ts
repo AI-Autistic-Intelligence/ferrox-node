@@ -6,22 +6,43 @@ import { InternalServerError } from '@node-yalc/errors';
 
 const logger = AppLoggerFactory('DatabaseFactory');
 
+/**
+ * Type alias for a custom driver factory function.
+ * Used to inject external database SDKs (like AWS DynamoDB or Firebase) without 
+ * creating hard dependencies in the core database module.
+ */
 export type DatabaseDriverFactory = (config: DatabaseConnectionConfig) => any | Promise<any>;
 
+/**
+ * Enterprise Database Connection Factory.
+ * 
+ * Provides a unified abstraction layer for establishing, caching, and tearing down 
+ * connections across varied data stores (SQL via TypeORM, MongoDB via Mongoose, 
+ * and custom cloud DBs via pluggable drivers).
+ */
 export class DatabaseFactory {
   private static instances: Map<string, any> = new Map();
   private static drivers: Map<string, DatabaseDriverFactory> = new Map();
 
   /**
-   * Registers a custom database driver (e.g., for AWS DynamoDB or Firebase)
+   * Registers a custom database driver (e.g., for AWS DynamoDB or Firebase).
+   * This enables dependency injection for SDKs that shouldn't be bundled by default.
+   * 
+   * @param type The string identifier for the database (e.g., 'dynamodb').
+   * @param factory The function responsible for initializing the connection.
    */
-  public static registerDriver(type: string, factory: DatabaseDriverFactory) {
+  public static registerDriver(type: string, factory: DatabaseDriverFactory): void {
     this.drivers.set(type, factory);
   }
 
   /**
    * Initializes and establishes a connection to the chosen database using enterprise defaults.
-   * Caches connections based on the database name/type to prevent connection leaks.
+   * Employs connection caching based on the database name/type to prevent connection pool leaks 
+   * in serverless environments or during hot-reloading.
+   * 
+   * @param {DatabaseConnectionConfig} config The connection configuration.
+   * @returns {Promise<any>} The initialized connection client (DataSource, Mongoose, or custom client).
+   * @throws {InternalServerError} If an unsupported database type is requested or missing its driver.
    */
   public static async createConnection(config: DatabaseConnectionConfig): Promise<any> {
     const connectionKey = `${config.type}_${config.database || config.projectId || 'default'}`;
@@ -63,6 +84,10 @@ export class DatabaseFactory {
     return client;
   }
 
+  /**
+   * Initializes a SQL database connection using TypeORM.
+   * @private
+   */
   private static async createTypeOrmConnection(config: DatabaseConnectionConfig): Promise<DataSource> {
     const dataSource = new DataSource({
       type: config.type === 'postgresql' ? 'postgres' : config.type as 'postgres' | 'mysql' | 'mariadb',
@@ -84,6 +109,10 @@ export class DatabaseFactory {
     return dataSource;
   }
 
+  /**
+   * Initializes a MongoDB connection using Mongoose.
+   * @private
+   */
   private static async createMongooseConnection(config: DatabaseConnectionConfig): Promise<typeof mongoose> {
     let uri = `mongodb://${config.host || 'localhost'}:${config.port || 27017}/${config.database}`;
     
@@ -108,6 +137,10 @@ export class DatabaseFactory {
     return mongoose;
   }
 
+  /**
+   * Gracefully destroys all active database connections tracked by the Factory.
+   * Essential for clean shutdowns (SIGINT/SIGTERM) to prevent hanging processes.
+   */
   public static async closeAllConnections(): Promise<void> {
     for (const [key, client] of this.instances.entries()) {
       if (client instanceof DataSource) {
