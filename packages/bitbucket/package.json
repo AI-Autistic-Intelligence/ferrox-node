@@ -1,0 +1,14 @@
+{
+  "name": "@ferrox-node/bitbucket",
+  "version": "1.1.0",
+  "description": "Bitbucket API Integration for Ferrox-Node",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": { "build": "tsc" },
+  "dependencies": {
+    "@ferrox-node/core": "^1.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
