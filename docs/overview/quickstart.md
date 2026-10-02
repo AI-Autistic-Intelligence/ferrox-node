@@ -175,5 +175,5 @@ Response:
 
 ## 7. Next Steps
 
-- Explore [Resilience Patterns](components/resilience.md) to set up Circuit Breakers.
-- Read about [Distributed Tracing](components/tracing.md) for OpenTelemetry integration.
+- Explore [Resilience Patterns](../security/resilience.md) to set up Circuit Breakers.
+- Read about [Distributed Tracing](../observability/tracing.md) for OpenTelemetry integration.

@@ -12,16 +12,235 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "types": [
-      "node"
+      "node",
+      "jest"
     ],
     "paths": {
-      "@node-yalc/*": [
-        "./node-yalc/*/src/*"
+      "@node-yalc/auth": [
+        "./node-yalc/auth/src/index.ts"
       ],
-      "@node-yalc/*.js": [
-        "./node-yalc/*/src/*"
+      "@node-yalc/auth/*": [
+        "./node-yalc/auth/src/*"
+      ],
+      "@node-yalc/aws-helpers": [
+        "./node-yalc/aws-helpers/src/index.ts"
+      ],
+      "@node-yalc/aws-helpers/*": [
+        "./node-yalc/aws-helpers/src/*"
+      ],
+      "@node-yalc/common": [
+        "./node-yalc/common/src/index.ts"
+      ],
+      "@node-yalc/common/*": [
+        "./node-yalc/common/src/*"
+      ],
+      "@node-yalc/config": [
+        "./node-yalc/config/src/index.ts"
+      ],
+      "@node-yalc/config/*": [
+        "./node-yalc/config/src/*"
+      ],
+      "@node-yalc/cqrs": [
+        "./node-yalc/cqrs/src/index.ts"
+      ],
+      "@node-yalc/cqrs/*": [
+        "./node-yalc/cqrs/src/*"
+      ],
+      "@node-yalc/datagrid": [
+        "./node-yalc/datagrid/src/index.ts"
+      ],
+      "@node-yalc/datagrid/*": [
+        "./node-yalc/datagrid/src/*"
+      ],
+      "@node-yalc/errors": [
+        "./node-yalc/errors/src/index.ts"
+      ],
+      "@node-yalc/errors/*": [
+        "./node-yalc/errors/src/*"
+      ],
+      "@node-yalc/event-manager": [
+        "./node-yalc/event-manager/src/index.ts"
+      ],
+      "@node-yalc/event-manager/*": [
+        "./node-yalc/event-manager/src/*"
+      ],
+      "@node-yalc/guards": [
+        "./node-yalc/guards/src/index.ts"
+      ],
+      "@node-yalc/guards/*": [
+        "./node-yalc/guards/src/*"
+      ],
+      "@node-yalc/i18n": [
+        "./node-yalc/i18n/src/index.ts"
+      ],
+      "@node-yalc/i18n/*": [
+        "./node-yalc/i18n/src/*"
+      ],
+      "@node-yalc/interfaces": [
+        "./node-yalc/interfaces/src/index.ts"
+      ],
+      "@node-yalc/interfaces/*": [
+        "./node-yalc/interfaces/src/*"
+      ],
+      "@node-yalc/jobs": [
+        "./node-yalc/jobs/src/index.ts"
+      ],
+      "@node-yalc/jobs/*": [
+        "./node-yalc/jobs/src/*"
+      ],
+      "@node-yalc/kernel": [
+        "./node-yalc/kernel/src/index.ts"
+      ],
+      "@node-yalc/kernel/*": [
+        "./node-yalc/kernel/src/*"
+      ],
+      "@node-yalc/logger": [
+        "./node-yalc/logger/src/index.ts"
+      ],
+      "@node-yalc/logger/*": [
+        "./node-yalc/logger/src/*"
+      ],
+      "@node-yalc/resilience": [
+        "./node-yalc/resilience/src/index.ts"
+      ],
+      "@node-yalc/resilience/*": [
+        "./node-yalc/resilience/src/*"
+      ],
+      "@node-yalc/security": [
+        "./node-yalc/security/src/index.ts"
+      ],
+      "@node-yalc/security/*": [
+        "./node-yalc/security/src/*"
+      ],
+      "@node-yalc/selftest": [
+        "./node-yalc/selftest/src/index.ts"
+      ],
+      "@node-yalc/selftest/*": [
+        "./node-yalc/selftest/src/*"
+      ],
+      "@node-yalc/storage": [
+        "./node-yalc/storage/src/index.ts"
+      ],
+      "@node-yalc/storage/*": [
+        "./node-yalc/storage/src/*"
+      ],
+      "@node-yalc/tracing": [
+        "./node-yalc/tracing/src/index.ts"
+      ],
+      "@node-yalc/tracing/*": [
+        "./node-yalc/tracing/src/*"
+      ],
+      "@node-yalc/transports": [
+        "./node-yalc/transports/src/index.ts"
+      ],
+      "@node-yalc/transports/*": [
+        "./node-yalc/transports/src/*"
+      ],
+      "@node-yalc/types": [
+        "./node-yalc/types/src/index.ts"
+      ],
+      "@node-yalc/types/*": [
+        "./node-yalc/types/src/*"
+      ],
+      "@node-yalc/utils": [
+        "./node-yalc/utils/src/index.ts"
+      ],
+      "@node-yalc/utils/*": [
+        "./node-yalc/utils/src/*"
+      ],
+      "@ferrox-node/aws": [
+        "./packages/aws/src/index.ts"
+      ],
+      "@ferrox-node/aws/*": [
+        "./packages/aws/src/*"
+      ],
+      "@ferrox-node/bitbucket": [
+        "./packages/bitbucket/src/index.ts"
+      ],
+      "@ferrox-node/bitbucket/*": [
+        "./packages/bitbucket/src/*"
+      ],
+      "@ferrox-node/core": [
+        "./packages/core/src/index.ts"
+      ],
+      "@ferrox-node/core/*": [
+        "./packages/core/src/*"
+      ],
+      "@ferrox-node/cqrs": [
+        "./packages/cqrs/src/index.ts"
+      ],
+      "@ferrox-node/cqrs/*": [
+        "./packages/cqrs/src/*"
+      ],
+      "@ferrox-node/database": [
+        "./packages/database/src/index.ts"
+      ],
+      "@ferrox-node/database/*": [
+        "./packages/database/src/*"
+      ],
+      "@ferrox-node/firebase": [
+        "./packages/firebase/src/index.ts"
+      ],
+      "@ferrox-node/firebase/*": [
+        "./packages/firebase/src/*"
+      ],
+      "@ferrox-node/gcp": [
+        "./packages/gcp/src/index.ts"
+      ],
+      "@ferrox-node/gcp/*": [
+        "./packages/gcp/src/*"
+      ],
+      "@ferrox-node/jobs": [
+        "./packages/jobs/src/index.ts"
+      ],
+      "@ferrox-node/jobs/*": [
+        "./packages/jobs/src/*"
+      ],
+      "@ferrox-node/kafka": [
+        "./packages/kafka/src/index.ts"
+      ],
+      "@ferrox-node/kafka/*": [
+        "./packages/kafka/src/*"
+      ],
+      "@ferrox-node/mailer": [
+        "./packages/mailer/src/index.ts"
+      ],
+      "@ferrox-node/mailer/*": [
+        "./packages/mailer/src/*"
+      ],
+      "@ferrox-node/observability": [
+        "./packages/observability/src/index.ts"
+      ],
+      "@ferrox-node/observability/*": [
+        "./packages/observability/src/*"
+      ],
+      "@ferrox-node/redis": [
+        "./packages/redis/src/index.ts"
+      ],
+      "@ferrox-node/redis/*": [
+        "./packages/redis/src/*"
+      ],
+      "@ferrox-node/security": [
+        "./packages/security/src/index.ts"
+      ],
+      "@ferrox-node/security/*": [
+        "./packages/security/src/*"
+      ],
+      "@ferrox-node/stripe": [
+        "./packages/stripe/src/index.ts"
+      ],
+      "@ferrox-node/stripe/*": [
+        "./packages/stripe/src/*"
+      ],
+      "@ferrox-node/transports": [
+        "./packages/transports/src/index.ts"
+      ],
+      "@ferrox-node/transports/*": [
+        "./packages/transports/src/*"
       ]
-    }
+    },
+    "baseUrl": ".",
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src/**/*",
