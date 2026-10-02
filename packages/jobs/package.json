@@ -7,7 +7,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@ferrox-node/core": "^1.1.0"
+    "@ferrox-node/core": "*"
   },
   "devDependencies": {
     "typescript": "^5.0.0"
