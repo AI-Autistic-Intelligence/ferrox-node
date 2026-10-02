@@ -8,7 +8,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@ferrox-node/core": "^1.1.0",
+    "@ferrox-node/core": "*",
     "ioredis": "^5.4.1",
     "redlock": "^5.0.0-beta.2"
   },
