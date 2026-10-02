@@ -1,0 +1,18 @@
+{
+  "name": "@ferrox-node/stripe",
+  "version": "1.1.0",
+  "description": "Stripe Payments and Webhook engine for Ferrox-Node",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@ferrox-node/core": "^1.1.0",
+    "stripe": "^15.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}
