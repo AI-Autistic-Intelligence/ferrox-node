@@ -8,7 +8,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@ferrox-node/core": "^1.1.0",
+    "@ferrox-node/core": "*",
     "nodemailer": "^6.9.13",
     "@sendgrid/mail": "^8.1.3"
   },
