@@ -360,7 +360,7 @@ describe('Ferrox-Node 100% Complete Framework Suite', () => {
 
   it('should execute CQRS Engine & Saga Orchestrator', async () => {
     const cqrs = new CqrsEngine();
-    cqrs.registerCommandHandler('CREATE_USER', async (cmd) => ({ id: 'usr_1', email: cmd.payload.email }));
+    cqrs.registerCommandHandler('CREATE_USER', async (cmd: any) => ({ id: 'usr_1', email: cmd.payload.email }));
     const user = await cqrs.executeCommand({ type: 'CREATE_USER', payload: { email: 'test@ferrox.dev' } });
     expect(user.id).toBe('usr_1');
 
