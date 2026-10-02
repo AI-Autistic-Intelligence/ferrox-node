@@ -12,8 +12,14 @@ module.exports = {
     '^(\\.{1,2}/.*)\\.js$': '$1',
     '^lodash-es$': 'lodash'
   },
-  testMatch: ['<rootDir>/packages/**/*.spec.ts', '<rootDir>/packages/**/__tests__/**/*.ts'],
+  testMatch: [
+    '<rootDir>/packages/**/*.spec.ts',
+    '<rootDir>/packages/**/__tests__/**/*.ts',
+    '<rootDir>/node-yalc/**/*.spec.ts',
+    '<rootDir>/node-yalc/**/__tests__/**/*.ts'
+  ],
   transform: {
     '^.+\\.[tj]sx?$': ['ts-jest', { tsconfig: 'tsconfig.test.json' }]
-  }
+  },
+  modulePathIgnorePatterns: ['<rootDir>/dist/']
 };
