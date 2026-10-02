@@ -1,6 +1,6 @@
 {
   "name": "@ferrox-node/stripe",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Stripe Payments and Webhook engine for Ferrox-Node",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
