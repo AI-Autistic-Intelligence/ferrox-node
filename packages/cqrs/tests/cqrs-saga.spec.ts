@@ -74,3 +74,22 @@ describe('AcidSagaCoordinator', () => {
     expect(trace).toEqual(['s1', 's2', 'c1']);
   });
 });
+
+import { CqrsEngine } from '../src/cqrs/cqrs-engine';
+
+describe('CqrsEngine', () => {
+  it('should register and execute a command handler', async () => {
+    const engine = new CqrsEngine();
+    const mockHandler = jest.fn().mockResolvedValue('success');
+    engine.registerCommandHandler('CreateUser', mockHandler);
+    
+    const result = await engine.executeCommand({ type: 'CreateUser', payload: 'test' });
+    expect(result).toBe('success');
+    expect(mockHandler).toHaveBeenCalledWith({ type: 'CreateUser', payload: 'test' });
+  });
+
+  it('should throw an error if no handler is registered for a command type', async () => {
+    const engine = new CqrsEngine();
+    await expect(engine.executeCommand({ type: 'UnknownCommand' })).rejects.toThrow('No handler');
+  });
+});

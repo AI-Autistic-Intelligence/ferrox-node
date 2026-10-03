@@ -59,4 +59,24 @@ describe('StripeWebhookRouter', () => {
     router.on('invoice.payment_failed', () => Promise.reject(new Error('Handler explosion')));
     await expect(router.handleWebhook(JSON.stringify({ id: 'evt_4', type: 'invoice.payment_failed' }), 'sig')).rejects.toThrow('Handler explosion');
   });
+
+  it('should support multiple handlers for the same event type', async () => {
+    const router = new StripeWebhookRouter('sk_test_123', 'whsec_456');
+    (router as any).client = {
+      webhooks: {
+        constructEvent: (raw: string) => JSON.parse(raw) as Stripe.Event
+      }
+    };
+    
+    const handler1 = jest.fn().mockResolvedValue(undefined);
+    const handler2 = jest.fn().mockResolvedValue(undefined);
+    
+    router.on('charge.succeeded', handler1);
+    router.on('charge.succeeded', handler2); // This triggers the false branch of if (!has)
+    
+    await router.handleWebhook(JSON.stringify({ id: 'evt_5', type: 'charge.succeeded' }), 'sig');
+    
+    expect(handler1).toHaveBeenCalledTimes(1);
+    expect(handler2).toHaveBeenCalledTimes(1);
+  });
 });
