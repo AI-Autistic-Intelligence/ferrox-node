@@ -1,6 +1,6 @@
 {
   "name": "@ferrox-node/bitbucket",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "Bitbucket API Integration for Ferrox-Node",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
