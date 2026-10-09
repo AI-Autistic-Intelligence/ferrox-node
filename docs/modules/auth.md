@@ -1,21 +1,50 @@
-# Auth Module (`node-yalc/auth`)
+---
+id: auth
+title: "@ferrox-node/auth"
+sidebar_position: 1
+---
 
-The Auth module provides enterprise-grade authentication utilities for the Ferrox-Node Framework. It focuses on modern, secure, and stateless authentication protocols, avoiding outdated or insecure practices.
+# 🚀 Auth Module (`@ferrox-node/auth`)
 
-## Overview
+## 💡 1. What It Is & Architectural Purpose
 
-The `node-yalc/auth` module currently offers two primary services:
+The Auth module provides enterprise-grade authentication utilities for the Ferrox-Node Framework. It focuses on modern, secure, and stateless authentication protocols, avoiding outdated or insecure practices. By utilizing the underlying `node-yalc` infrastructure, it bridges standard Node authentication patterns with high-performance operations, ensuring that cryptographic operations remain secure and efficient.
+
+---
+
+## ⚙️ 2. Comprehensive Taxonomy & Key Features
+
+The `@ferrox-node/auth` module currently offers two primary services aligned with the Layer 3 (Security) specifications of the Ferrox Architecture:
+
 1. **PASETO Authentication (`PasetoAuthService`)**: Platform-Agnostic Security Tokens.
-2. **TOTP Authentication (`TotpAuthService`)**: Time-Based One-Time Passwords for MFA.
+2. **TOTP Authentication (`TotpAuthService`)**: Time-Based One-Time Passwords for Multi-Factor Authentication (MFA).
 
-## PASETO (Platform-Agnostic Security Tokens)
+---
+
+## 🔬 3. How It Works Under the Hood
+
+### PASETO (Platform-Agnostic Security Tokens)
 
 Unlike JWTs, which allow the header to specify the cryptographic algorithm (leading to algorithmic confusion attacks), PASETO enforces algorithms strictly based on the token version and purpose. This module implements **v4.local**, which utilizes symmetric authenticated encryption (AES-256-GCM) to ensure payloads are completely opaque and tamper-proof to the client.
 
-### Usage Example
+### TOTP (Time-Based One-Time Password)
+
+The `TotpAuthService` implements RFC 6238 to provide 2FA / MFA capabilities. It generates highly secure secrets, creates QR code URIs compliant with standard authenticator apps, and validates user-submitted codes against a sliding time window to account for clock skew.
+
+---
+
+## 🧠 4. Why It Was Designed This Way (Rationale)
+
+JWTs have historically suffered from structural vulnerabilities due to their "algo-agility" design. By shifting to PASETO v4, the architecture completely eliminates algorithm-downgrade attacks. Furthermore, implementing these security primitives as dedicated Node services ensures that any HTTP framework (like NestJS or Fastify) can safely inject them without coupling security logic to HTTP request parsing.
+
+---
+
+## 🚀 5. Practical Usage Guide & Extended Code Examples
+
+### 5.1 PASETO Usage
 
 ```typescript
-import { PasetoAuthService } from '@node-yalc/auth';
+import { PasetoAuthService } from '@ferrox-node/auth';
 
 const pasetoService = new PasetoAuthService('super-secret-32-byte-key-string!');
 
@@ -33,14 +62,10 @@ try {
 }
 ```
 
-## TOTP (Time-Based One-Time Password)
-
-The `TotpAuthService` implements RFC 6238 to provide 2FA / MFA capabilities. It allows generating secrets, creating QR code URIs, and validating user-submitted codes against a sliding time window.
-
-### Usage Example
+### 5.2 TOTP Usage
 
 ```typescript
-import { TotpAuthService } from '@node-yalc/auth';
+import { TotpAuthService } from '@ferrox-node/auth';
 
 const totpService = new TotpAuthService();
 
@@ -50,17 +75,30 @@ const secret = totpService.generateSecret();
 
 // 2. Setup Phase: Generate QR Code URI for the user's authenticator app
 const uri = totpService.generateOtpAuthUri('user@example.com', secret, 'Ferrox App');
-// Render `uri` as a QR code in the frontend
 
 // 3. Login Phase: Verify the 6-digit code submitted by the user
 const isValid = totpService.verifyTotpCode(secret, '123456');
-if (isValid) {
-  // Proceed with login
-} else {
-  // Reject login
-}
 ```
 
-## Next Steps
+---
 
-These services are designed to be imported directly into dependency injection containers (e.g., NestJS modules or Fastify decorators). Ensure that all cryptographic secrets (like the PASETO symmetric key) are injected via environment variables (`process.env`) and never hardcoded in production.
+## ⚠️ 6. Anti-Patterns: How NOT to Use It
+
+> [!CAUTION]
+> **Anti-Pattern 1: Hardcoding Secrets**
+> Never hardcode the PASETO symmetric key in source code. It must be dynamically injected via environment variables (`process.env.PASETO_KEY`) or fetched from a secure Secret Manager (like AWS Secrets Manager or HashiCorp Vault) at runtime.
+
+---
+
+## 💡 7. Pro-Tips & Best Practices
+
+> [!TIP]
+> **Pro-Tip 1: Key Rotation**
+> Use structured key rotation for PASETO v4 local tokens by maintaining an array of valid decryption keys. Attempt to verify against the newest key first, and fallback to older keys to gracefully transition without forcibly logging out active users.
+
+---
+
+## 🔗 Cross-References
+
+- [Ferrox-Node Overview](../overview.md)
+- [Node-YALC Auth](../../node-yalc/security/auth.md)
