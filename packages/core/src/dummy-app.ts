@@ -71,7 +71,7 @@ export class BusinessLogicService {
    * Processes a high-risk transaction.
    * The entire execution is wrapped by the resilience circuit.
    */
-  async processHighRiskTransaction(payload: any): Promise<any> {
+  async processHighRiskTransaction<T extends { amount?: number }>(payload: T): Promise<{ transactionId: string, status: string, processedAt: string }> {
     return this.circuitBreaker.execute(async () => {
       // Basic input validation. Automatically returns HTTP 400 Bad Request.
       if (!payload || !payload.amount) {
@@ -134,8 +134,9 @@ export class EnterpriseController implements OnAppStart, OnAppDestroy {
       try {
         DeployFactory.generateDeployment(deployConfig, './deploy-output');
         logger.log('Infrastructure-as-Code (Kubernetes) generated successfully in ./deploy-output');
-      } catch (err: any) {
-        logger.error('Failed to generate deployment scripts', err.stack || String(err));
+      } catch (err: unknown) {
+        const error = err as Error;
+        logger.error('Failed to generate deployment scripts', error.stack || String(error));
       }
     }
   }
@@ -183,7 +184,7 @@ export class EnterpriseController implements OnAppStart, OnAppDestroy {
    * Demonstration of manual token validation (can be automated with a @UseGuard).
    */
   @Get('/secure-data')
-  getSecureData(req: any) {
+  getSecureData(req: { headers: Record<string, string | undefined> }) {
     const authHeader = req.headers['authorization'];
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       throw new UnauthorizedError('Missing or invalid Authorization header');
@@ -198,8 +199,8 @@ export class EnterpriseController implements OnAppStart, OnAppDestroy {
         user: decoded.sub,
         roles: decoded.roles
       };
-    } catch (err: any) {
-      throw new UnauthorizedError(`Token validation failed: ${err.message}`);
+    } catch (err: unknown) {
+      throw new UnauthorizedError(`Token validation failed: ${(err as Error).message}`);
     }
   }
 
@@ -207,15 +208,16 @@ export class EnterpriseController implements OnAppStart, OnAppDestroy {
    * Endpoint to demonstrate the use of the business service and error handling.
    */
   @Post('/transaction')
-  async handleTransaction(req: any) {
+  async handleTransaction(req: { body?: { amount?: number } }) {
     const body = req.body || { amount: 50000 };
     
     try {
       const result = await this.businessService.processHighRiskTransaction(body);
       return result;
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as Error;
       // We catch this here solely to log critical anomalies locally
-      logger.error(`Transaction failed: ${err.message}`, err.stack);
+      logger.error(`Transaction failed: ${error.message}`, error.stack);
       // By re-throwing the exception, we delegate HTTP formatting for the client to the framework
       throw err; 
     }
@@ -264,8 +266,8 @@ async function bootstrap() {
     // Uncomment to actually connect the DB
     // await DatabaseFactory.createConnection(dbConfig);
     logger.log('Database configuration loaded. (Connection mocked for dummy-app)');
-  } catch (err: any) {
-    logger.error('Database initialization failed. Please check your credentials.', err.stack || String(err));
+  } catch (err: unknown) {
+    logger.error('Database initialization failed. Please check your credentials.', (err as Error).stack || String(err));
   }
 
   // 3. Application Bootstrapping
@@ -277,7 +279,7 @@ async function bootstrap() {
     middlewares: [
       {
         path: '*',
-        handler: (req: any, res: any, next: any) => {
+        handler: (req: { method: string, url: string }, res: unknown, next: Function) => {
           logger.log(`[Global Middleware] HTTP ${req.method} request received at ${req.url}`);
           next();
         }
@@ -298,11 +300,11 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-process.on('unhandledRejection', (reason: any, promise) => {
+process.on('unhandledRejection', (reason: unknown, promise) => {
   logger.error('CRITICAL: Unhandled Promise Rejection detected.', reason);
 });
 
-bootstrap().catch((err: any) => {
-  logger.error('Failed to bootstrap application', err.stack || String(err));
+bootstrap().catch((err: unknown) => {
+  logger.error('Failed to bootstrap application', (err as Error).stack || String(err));
 });
 

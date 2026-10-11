@@ -7,12 +7,12 @@ export interface RouteMetadata {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   path: string;
   handlerName: string;
-  guards: any[];
+  guards: unknown[];
 }
 
 export interface ControllerMetadata {
   prefix: string;
-  guards: any[];
+  guards: unknown[];
   routes: RouteMetadata[];
 }
 
@@ -22,14 +22,14 @@ const GUARDS_METADATA_KEY = Symbol('ferrox:guards');
 const ROLES_METADATA_KEY = Symbol('ferrox:roles');
 
 export function Controller(prefix: string = ''): ClassDecorator {
-  return (target: any) => {
+  return (target: Function) => {
     Reflect.defineMetadata(CONTROLLER_METADATA_KEY, prefix, target);
   };
 }
 
 function createRouteDecorator(method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH') {
-  return (path: string = ''): any => {
-    return (target: any, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<any>) => {
+  return (path: string = ''): MethodDecorator => {
+    return (target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<unknown>) => {
       const routes: RouteMetadata[] = Reflect.getMetadata(ROUTE_METADATA_KEY, target.constructor) || [];
       routes.push({
         method,
@@ -48,8 +48,8 @@ export const Put = createRouteDecorator('PUT');
 export const Delete = createRouteDecorator('DELETE');
 export const Patch = createRouteDecorator('PATCH');
 
-export function UseGuard(...guards: any[]): any {
-  return (target: any, propertyKey?: string | symbol, descriptor?: TypedPropertyDescriptor<any>) => {
+export function UseGuard(...guards: unknown[]): ClassDecorator | MethodDecorator {
+  return (target: Function | Object, propertyKey?: string | symbol, descriptor?: TypedPropertyDescriptor<unknown>) => {
     if (propertyKey) {
       // Method guard
       const existingGuards = Reflect.getMetadata(GUARDS_METADATA_KEY, target.constructor, propertyKey) || [];
@@ -62,8 +62,8 @@ export function UseGuard(...guards: any[]): any {
   };
 }
 
-export function Roles(...roles: string[]): any {
-  return (target: any, propertyKey?: string | symbol, descriptor?: TypedPropertyDescriptor<any>) => {
+export function Roles(...roles: string[]): ClassDecorator | MethodDecorator {
+  return (target: Function | Object, propertyKey?: string | symbol, descriptor?: TypedPropertyDescriptor<unknown>) => {
     if (propertyKey) {
       Reflect.defineMetadata(ROLES_METADATA_KEY, roles, target.constructor, propertyKey);
     } else {
@@ -72,8 +72,8 @@ export function Roles(...roles: string[]): any {
   };
 }
 
-export function getControllerMetadata(controllerInstance: any): ControllerMetadata {
-  const target = controllerInstance.constructor;
+export function getControllerMetadata(controllerInstance: unknown): ControllerMetadata {
+  const target = (controllerInstance as any).constructor;
   const prefix = Reflect.getMetadata(CONTROLLER_METADATA_KEY, target) || '';
   const classGuards = Reflect.getMetadata(GUARDS_METADATA_KEY, target) || [];
   const rawRoutes: RouteMetadata[] = Reflect.getMetadata(ROUTE_METADATA_KEY, target) || [];
@@ -93,9 +93,9 @@ export function getControllerMetadata(controllerInstance: any): ControllerMetada
   };
 }
 
-export function getRolesMetadata(target: any, propertyKey?: string): string[] {
+export function getRolesMetadata(target: unknown, propertyKey?: string): string[] {
   if (propertyKey) {
-    return Reflect.getMetadata(ROLES_METADATA_KEY, target.constructor, propertyKey) || [];
+    return Reflect.getMetadata(ROLES_METADATA_KEY, (target as any).constructor, propertyKey) || [];
   }
   return Reflect.getMetadata(ROLES_METADATA_KEY, target) || [];
 }
@@ -106,13 +106,13 @@ export function getRolesMetadata(target: any, propertyKey?: string): string[] {
 const INJECTABLE_METADATA_KEY = 'ferrox:injectable';
 
 export function Injectable(): ClassDecorator {
-  return (target: any) => {
+  return (target: Function) => {
     Reflect.defineMetadata(INJECTABLE_METADATA_KEY, true, target);
   };
 }
 
-export function Inject(token: any): ParameterDecorator {
-  return (target: any, propertyKey: string | symbol | undefined, parameterIndex: number) => {
+export function Inject(token: unknown): ParameterDecorator {
+  return (target: Object, propertyKey: string | symbol | undefined, parameterIndex: number) => {
     const existingInjections = Reflect.getMetadata('ferrox:injections', target) || [];
     existingInjections.push({ index: parameterIndex, token });
     Reflect.defineMetadata('ferrox:injections', existingInjections, target);
