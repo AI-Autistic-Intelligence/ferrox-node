@@ -22,11 +22,11 @@ export interface FerroxAppOptions {
   /** The hostname or IP address the server will bind to. Defaults to '0.0.0.0'. */
   host?: string;
   /** An array of Controller classes to be instantiated and mapped to routes. */
-  controllers?: Function[];
+  controllers?: any[];
   /** An array of Guard instances that run globally on every request. */
-  globalGuards?: unknown[];
+  globalGuards?: any[];
   /** An array of middlewares to apply to the server. */
-  middlewares?: Array<{ path?: string; handler: unknown }>;
+  middlewares?: Array<{ path?: string; handler: any }>;
   /** Secret key for the Sentinel Security Engine. */
   sentinelSecretKey?: string;
 }
@@ -41,9 +41,9 @@ export class FerroxApp {
   private adapter: IFerroxHttpAdapter;
   private port: number;
   private host: string;
-  private controllers: Function[];
-  private globalGuards: any[]; // using any for internal guard interface compatibility
-  private middlewares: Array<{ path?: string; handler: unknown }>;
+  private controllers: any[];
+  private globalGuards: any[];
+  private middlewares: Array<{ path?: string; handler: any }>;
   
   /** The active Sentinel Security engine instance. */
   public sentinel: FerroxSentinelSecurityEngine;
@@ -82,7 +82,7 @@ export class FerroxApp {
   private registerControllers(): void {
     for (const ControllerClass of this.controllers) {
       // Resolve controller instance via DI container
-      const controllerInstance = this.di.resolve(ControllerClass) as Record<string, Function>;
+      const controllerInstance: any = this.di.resolve(ControllerClass);
       const meta = getControllerMetadata(controllerInstance);
       const prefix = meta.prefix;
 
@@ -93,14 +93,14 @@ export class FerroxApp {
         const routeDef: FerroxRouteDefinition = {
           method: routeMeta.method,
           path: fullPath,
-          handler: async (req: unknown, res: unknown) => {
+          handler: async (req: any, res: any) => {
             const startTime = Date.now();
             this.logger.log(`[REQUEST] ${req.method} ${req.url}`);
 
             try {
               // 1. Run global guards
               for (const guard of this.globalGuards) {
-                const allowed = await (guard as { canActivate: Function }).canActivate(req, res);
+                const allowed = await guard.canActivate(req, res);
                 if (!allowed) {
                   this.logger.warn(`[GUARD] Global guard blocked request to ${req.url}`);
                   return;
@@ -109,7 +109,7 @@ export class FerroxApp {
 
               // 2. Run controller / route guards
               for (const guard of routeMeta.guards) {
-                const allowed = await (guard as { canActivate: Function }).canActivate(req, res);
+                const allowed = await guard.canActivate(req, res);
                 if (!allowed) {
                   this.logger.warn(`[GUARD] Route guard blocked request to ${req.url}`);
                   return;
@@ -120,10 +120,9 @@ export class FerroxApp {
               const result = await handlerFn(req, res);
               this.logger.log(`[RESPONSE] ${req.method} ${req.url} - OK (${Date.now() - startTime}ms)`);
               return result;
-            } catch (err: unknown) {
-              const error = err as Error;
-              this.logger.error(`[ERROR] ${(req as any).method} ${(req as any).url} - Failed: ${error.message}`, error.stack);
-              throw error;
+            } catch (err: any) {
+              this.logger.error(`[ERROR] ${req.method} ${req.url} - Failed: ${err.message}`, err.stack);
+              throw err;
             }
           },
         };
@@ -142,7 +141,7 @@ export class FerroxApp {
 
     // Run OnAppStart hooks
     for (const ControllerClass of this.controllers) {
-      const instance = this.di.resolve(ControllerClass) as { onAppStart?: Function };
+      const instance: any = this.di.resolve(ControllerClass);
       if (typeof instance.onAppStart === 'function') {
         await instance.onAppStart();
       }
@@ -153,7 +152,7 @@ export class FerroxApp {
     process.on('SIGINT', () => this.shutdown());
     process.on('SIGTERM', () => this.shutdown());
 
-    return this.server as http.Server;
+    return this.server as any;
   }
 
   /**
@@ -168,7 +167,7 @@ export class FerroxApp {
 
     // Run OnAppDestroy hooks
     for (const ControllerClass of this.controllers) {
-      const instance = this.di.resolve(ControllerClass) as { onAppDestroy?: Function };
+      const instance: any = this.di.resolve(ControllerClass);
       if (typeof instance.onAppDestroy === 'function') {
         await instance.onAppDestroy();
       }
