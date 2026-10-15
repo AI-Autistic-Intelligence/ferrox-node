@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  showcase-app:
+    build:
+      context: ../..
+      dockerfile: examples/enterprise-showcase/Dockerfile
+    container_name: ferrox-node-showcase
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0
+      - DATABASE_URL=postgresql://postgres:ferrox_secret@postgres:5432/ferrox_showcase
+      - REDIS_URL=redis://redis:6379
+      - PASETO_SECRET=ferrox-enterprise-paseto-secret-32b-key!
+      - PASETO_ISSUER=ferrox-node-showcase
+      - SENTINEL_SECRET=sentinel-threat-engine-master-key-01
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ferrox-node-net
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: ferrox-node-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ferrox_showcase
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ferrox_secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ferrox_showcase"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - ferrox-node-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: ferrox-node-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - ferrox-node-net
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: ferrox-node-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Web UI
+    networks:
+      - ferrox-node-net
+
+volumes:
+  pgdata:
+
+networks:
+  ferrox-node-net:
+    driver: bridge
