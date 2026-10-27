@@ -12,7 +12,7 @@ import {
   TeamRadioClip,
   TrackWeatherSample,
 } from '../types.js';
-import { CachedHttpClient } from '@node-yalc/transports';
+import type { ICachedHttpClient } from '@node-yalc/transports';
 
 type Raw = Record<string, unknown>;
 
@@ -156,7 +156,7 @@ function list<T>(payload: unknown, mapper: (r: Raw) => T): T[] {
 }
 
 export class OpenF1Client {
-  constructor(private readonly http: CachedHttpClient) {}
+  constructor(private readonly http: ICachedHttpClient) {}
 
   async sessions(year: number, ttl: number): Promise<SessionInfo[]> {
     return list(await this.http.getJson(`/sessions?year=${year}`, ttl), mapSession);

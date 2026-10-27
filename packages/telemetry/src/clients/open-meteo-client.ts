@@ -1,5 +1,5 @@
 import { weatherDescription } from '../weather/weather.js';
-import { CachedHttpClient } from '@node-yalc/transports';
+import type { ICachedHttpClient } from '@node-yalc/transports';
 
 type Raw = Record<string, any>;
 
@@ -30,7 +30,7 @@ export interface HourlyForecastPoint {
 const n = (v: unknown): number => (typeof v === 'number' && Number.isFinite(v) ? v : 0);
 
 export class OpenMeteoClient {
-  constructor(private readonly http: CachedHttpClient) {}
+  constructor(private readonly http: ICachedHttpClient) {}
 
   async current(lat: number, lon: number, ttl: number): Promise<CurrentConditions | null> {
     const q =

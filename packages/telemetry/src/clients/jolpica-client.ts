@@ -1,5 +1,5 @@
 import { ConstructorStanding, DriverStanding, RaceWeekend } from '../championship/championship.js';
-import { CachedHttpClient } from '@node-yalc/transports';
+import type { ICachedHttpClient } from '@node-yalc/transports';
 
 type Raw = Record<string, any>;
 
@@ -51,7 +51,7 @@ function standingsList(payload: Raw): Raw | null {
 }
 
 export class JolpicaClient {
-  constructor(private readonly http: CachedHttpClient) {}
+  constructor(private readonly http: ICachedHttpClient) {}
 
   async driverStandings(season: string, ttl: number): Promise<StandingsPayload<DriverStanding>> {
     const list = standingsList(await this.http.getJson<Raw>(`/${season}/driverstandings.json?limit=100`, ttl));

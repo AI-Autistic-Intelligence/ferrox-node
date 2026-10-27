@@ -1,6 +1,6 @@
 {
   "name": "@ferrox-node/telemetry",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Ferrox-Node: Motorsport Telemetry, Vehicle Dynamics, Race Strategy & F1 Kinematics Engine",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,5 +17,5 @@
   "devDependencies": {
     "typescript": "^5.0.0"
   },
-  "type": "module"
+  "type": "commonjs"
 }
