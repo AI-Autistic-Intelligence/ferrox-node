@@ -40,5 +40,8 @@ export * from '@ferrox-node/jobs';
 export * from '@ferrox-node/transports';
 export * from '@ferrox-node/observability';
 export * from '@node-yalc/logger';
+export * from '@node-yalc/storage';
+export * from '@node-yalc/utils';
+export * from '@ferrox-node/telemetry';
 
 

@@ -1,0 +1,21 @@
+{
+  "name": "@ferrox-node/telemetry",
+  "version": "1.0.0",
+  "description": "Ferrox-Node: Motorsport Telemetry, Vehicle Dynamics, Race Strategy & F1 Kinematics Engine",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@ferrox-node/core": "*",
+    "@node-yalc/resilience": "^0.2.12",
+    "@node-yalc/storage": "^0.2.12",
+    "@node-yalc/transports": "^0.2.12",
+    "@node-yalc/utils": "^0.3.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "type": "module"
+}

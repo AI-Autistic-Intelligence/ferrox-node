@@ -1,6 +1,7 @@
 {
   "name": "@ferrox-node/enterprise-showcase",
   "version": "1.0.0",
+  "private": true,
   "description": "Enterprise Reference Showcase Application for Ferrox-Node Framework",
   "main": "dist/index.js",
   "scripts": {
